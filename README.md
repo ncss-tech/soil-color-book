@@ -1,6 +1,8 @@
 # soil-color-book
 A soil color map for every state.
 
+Insert map of states, with colors set by soil color of state soil.
+
 # Methods
 
 
