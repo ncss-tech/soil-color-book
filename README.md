@@ -14,7 +14,7 @@ Insert map of states, with colors set by soil color of state soil.
 
 
 
-
+![](https://github.com/ncss-tech/soil-color-book/raw/master/static-images/NE_colors.gif)
 ![](https://github.com/ncss-tech/soil-color-book/raw/master/static-images/WI-10-preview.jpg)
 ![](https://github.com/ncss-tech/soil-color-book/raw/master/static-images/WI-25-preview.jpg)
 ![](https://github.com/ncss-tech/soil-color-book/raw/master/static-images/WI-75-preview.jpg)
