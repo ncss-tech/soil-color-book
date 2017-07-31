@@ -23,6 +23,7 @@ Insert map of states, with colors set by soil color of state soil.
  8. What are the final products; atlas style book, website, library of raster files for distribution, etc.
  9. How are the .clr files made, are they text / binary?
  10. Why do NOTCOM areas have colors via .clr mapping?
+ 11. Is there a more informative way to represent bedrock contact, besides "no color" (e.g. shallow and mod. deep soils)
 
 
 # Misc. Ideas:
