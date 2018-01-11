@@ -11,11 +11,14 @@ library(scales)
 
 # get a copy of the latest OSD colors:
 # echo "\copy osd.osd_colors TO 'osd_colors.csv' CSV HEADER " | psql -U postgres ssurgo_combined
-# gzip osd-colors-original.csv
+# gzip osd_colors.csv
 
 # load OSD colors by horizons (gzipped CSV)
 # don't convert characters -> factors
-x <- read.csv('data/osd_colors.csv.gz', stringsAsFactors=FALSE, na.strings='')
+x <- read.csv('../data/osd_colors.csv.gz', stringsAsFactors=FALSE, na.strings='')
+
+# remove narrative
+x$narrative <- NULL
 
 # check: some series / horizons are missing colors
 head(x)
@@ -23,6 +26,7 @@ head(x)
 # re-order by series, then depth
 x <- x[order(x$series, x$top), ]
 
+## TODO: find and fix these
 # note that there are some errors in there...
 sort(table(x$matrix_dry_color_hue, useNA='always'), decreasing=TRUE)
 sort(table(x$matrix_wet_color_hue, useNA='always'), decreasing=TRUE)
@@ -89,14 +93,14 @@ g.slices <- slice(g, c(5, 10, 15, 25, 50, 75, 100, 125) ~ r_int + g_int + b_int,
 
 # save single depth slice to a file
 vars <- c('series', 'r_int', 'g_int', 'b_int')
-write.csv(g.slices[g.slices$top == 5, vars], file=gzfile('data/osd_colors-5cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 10, vars], file=gzfile('data/osd_colors-10cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 15, vars], file=gzfile('data/osd_colors-15cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 25, vars], file=gzfile('data/osd_colors-25cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 50, vars], file=gzfile('data/osd_colors-50cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 75, vars], file=gzfile('data/osd_colors-75cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 100, vars], file=gzfile('data/osd_colors-100cm.csv.gz'), row.names=FALSE, na='')
-write.csv(g.slices[g.slices$top == 125, vars], file=gzfile('data/osd_colors-125cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 5, vars], file=gzfile('../data/osd_colors-5cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 10, vars], file=gzfile('../data/osd_colors-10cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 15, vars], file=gzfile('../data/osd_colors-15cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 25, vars], file=gzfile('../data/osd_colors-25cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 50, vars], file=gzfile('../data/osd_colors-50cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 75, vars], file=gzfile('../data/osd_colors-75cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 100, vars], file=gzfile('../data/osd_colors-100cm.csv.gz'), row.names=FALSE, na='')
+write.csv(g.slices[g.slices$top == 125, vars], file=gzfile('../data/osd_colors-125cm.csv.gz'), row.names=FALSE, na='')
 
 
 ##
@@ -119,7 +123,7 @@ g.b <- ddply(horizons(g), 'series', .fun=f, .progress='text')
 head(g.b)
 
 # save
-write.csv(g.b[, vars], file=gzfile('data/osd-brightest-color.csv.gz'), row.names=FALSE, na='')
+write.csv(g.b[, vars], file=gzfile('../data/osd-brightest-color.csv.gz'), row.names=FALSE, na='')
 
 
 
