@@ -4,6 +4,7 @@ library(cluster)
 library(sharpshootR)
 library(colorspace)
 library(reshape2)
+library(maps)
 
 # state soils
 ss <- read.csv('state_soils.csv', stringsAsFactors = FALSE)
@@ -131,15 +132,15 @@ plotProfileDendrogram(sp, dd, dend.y.scale = 0.5, divide.hz=FALSE, scaling.facto
 dd$order.lab
 dd$order
 
-
-## all colors from all pedons
-a <- aggregateColor(pedons, groups = 'state', col = 'moist_soil_color')
-
-
-
-par(mar=c(2, 6, 1, 1))
-aggregateColorPlot(a, print.label = FALSE)
-
+# 
+# ## all colors from all pedons
+# a <- aggregateColor(pedons, groups = 'state', col = 'moist_soil_color')
+# 
+# 
+# 
+# par(mar=c(2, 6, 1, 1))
+# aggregateColorPlot(a, print.label = FALSE)
+# 
 
 
 
@@ -274,8 +275,32 @@ title(main='State Soil Colors', line=-1, cex.main=2)
 
 dev.off()
 
-# geofacet with state soil colours + Munsell
-# 
+
+
+## simple map with maps package
+
+# get state names in order of plotting
+state.map <- map('state', plot=FALSE)$names
+# clean cruft from names
+state.map <- strsplit(state.map, ':')
+state.map <- sapply(state.map, function(i) i[[1]])
+
+# index mapping states to colors
+col.idx <- match(state.map, tolower(a.aggregate$state))
+
+
+png(file='state-soils-single-color-map.png', width = 1000, height=900, type = 'cairo', antialias = 'subpixel', res = 90)
+
+par(mar=c(1,0,1,1))
+map('state', col=a.aggregate$col[col.idx], fill=TRUE, mar=c(1,1,2,1))
+title(main='State Soil Colors', line=1, cex.main=2)
+
+dev.off()
+
+
+##
+## geofacet with state soil colours + Munsell
+##
 library(ggplot2)
 library(geofacet)
 
@@ -302,12 +327,12 @@ geoplot <- ggplot(a.aggregate) +
     axis.title = element_blank()
   )
 
-png("./geofacet-soils.png", res = 200, width = 2500, height = 2000)
+png("./geofacet-soils.png", res = 200, width = 2500, height = 2000, type='cairo', antialias = 'subpixel')
 print(geoplot)
 dev.off()
 
 
-# geofacet with treemaps of main soil colours per state
+## geofacet with treemaps of main soil colours per state
 
 library(treemapify)
 
