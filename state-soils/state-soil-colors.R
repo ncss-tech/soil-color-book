@@ -196,7 +196,12 @@ lab.colors <- as(RGB(rgb.colors[['r']], rgb.colors[['g']], rgb.colors[['b']]), '
 cols <- cbind(rgb.colors, lab.colors)
 cols <- na.omit(cols)
 cols <- as.data.frame(cols)
-pairs(~ L + A + B, data=cols, pch=16, cex=2, col=rgb(cols$r, cols$g, cols$b))
+
+png(file='state-soils-osd-color-LAB-palette.png', width=800, height=800, res=90, type='cairo', antialias = 'subpixel')
+
+pairs(~ L + A + B, data=cols, pch=16, cex=3, col=rgb(cols$r, cols$g, cols$b))
+
+dev.off()
 
 # generate color signatures using OSDs and PAM method
 pig <- soilColorSignature(s, RescaleLightnessBy = 5, method='pam')
@@ -228,7 +233,7 @@ a.osd <- aggregateColor(s, groups='state', col='soil_color')
 png(file='state-soils-osd-signatures.png', width = 1000, height=800, type = 'cairo', antialias = 'subpixel', res = 90)
 
 par(mar=c(0.5, 6, 1, 0.5))
-aggregateColorPlot(a.osd, print.label = FALSE, x.axis = FALSE)
+aggregateColorPlot(a.osd, print.label = FALSE, x.axis = FALSE, rect.border = NA, horizontal.borders = TRUE, horizontal.border.lwd = 1)
 title(main='State Soil Color Signatures: OSD', line=-1, cex.main=2)
 
 dev.off()
@@ -243,7 +248,7 @@ a.kssl <- aggregateColor(pedons, groups = 'state', col = 'moist_soil_color')
 png(file='state-soils-kssl-signatures.png', width = 1000, height=800, type = 'cairo', antialias = 'subpixel', res = 90)
 
 par(mar=c(0.5, 6, 1, 0.5))
-aggregateColorPlot(a.kssl, print.label = FALSE, x.axis = FALSE)
+aggregateColorPlot(a.kssl, print.label = FALSE, x.axis = FALSE, rect.border = NA, horizontal.borders = TRUE, horizontal.border.lwd = 1)
 title(main='State Soil Color Signatures: KSSL', line=-1, cex.main=2)
 
 dev.off()
