@@ -274,9 +274,68 @@ title(main='State Soil Colors', line=-1, cex.main=2)
 
 dev.off()
 
+# geofacet with state soil colours + Munsell
+# 
+library(ggplot2)
+library(geofacet)
+
+state_cols <- a.aggregate$col
+names(state_cols) <- a.aggregate$state
+
+geoplot <- ggplot(a.aggregate) + 
+  geom_rect(aes(xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = state)) + 
+  geom_text(aes(x = 0.5, y = 0.5, label = munsell), colour = "#ffffff") +
+  facet_geo(~state, strip.position = "bottom") + 
+  scale_fill_manual(
+    guide = FALSE, 
+    values = state_cols
+  ) + 
+  coord_equal() +
+  theme_bw() + 
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(face = "bold"),
+    panel.border = element_rect(fill = NA, colour = NA),
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
+  )
+
+png("./geofacet-soils.png", res = 200, width = 2500, height = 2000)
+print(geoplot)
+dev.off()
 
 
+# geofacet with treemaps of main soil colours per state
 
+library(treemapify)
 
+soil_data_states <- do.call(rbind, a.kssl$scaled.data)
+soil_data_states$state <- stringr::str_remove(stringr::str_extract(row.names(soil_data_states), '.*[.]'), "\\.")
 
+treemap_cols <- soil_data_states$moist_soil_color
+names(treemap_cols) <- munsell
 
+geoplot_treemap <- ggplot(data = soil_data_states) + 
+  geom_treemap(aes(area = weight, fill = munsell)) +
+  facet_geo(~state, strip.position = "bottom") + 
+  scale_fill_manual(
+    guide = FALSE, 
+    values = treemap_cols
+  ) + 
+  coord_equal() +
+  theme_bw() + 
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(face = "bold"),
+    panel.border = element_rect(fill = NA, colour = NA),
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
+  )
+
+png("./geofacet-treemap-soils.png", res = 300, width = 5000, height = 4000)
+print(geoplot_treemap)
+dev.off()
