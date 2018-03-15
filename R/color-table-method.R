@@ -6,11 +6,11 @@ library(scales)
 
 # get a copy of the latest OSD colors:
 # echo "\copy osd.osd_colors TO 'osd_colors.csv' CSV HEADER " | psql -U postgres ssurgo_combined
-# gzip osd-colors-original.csv
+# gzip osd_colors.csv
 
 # load OSD colors by horizons (gzipped CSV)
 # don't convert characters -> factors
-x <- read.csv('data/osd_colors.csv.gz', stringsAsFactors=FALSE, na.strings='')
+x <- read.csv('../data/osd_colors.csv.gz', stringsAsFactors=FALSE, na.strings='')
 
 # re-order by series, then depth
 x <- x[order(x$series, x$top), ]
@@ -47,8 +47,8 @@ x.wide <- dcast(x.slices, series ~ top, value.var = 'color_str_code')
 names(x.wide) <- c('series', paste0('top_', c(5, 10, 15, 25, 50, 75, 100, 125)))
 
 # save files
-write.csv(x.wide, file=gzfile('data/osd-color-codes-slices.csv.gz'), row.names = FALSE, na = '')
-write.csv(osd.color.table, file=gzfile('data/osd-color-table.csv.gz'), row.names = FALSE, na = '')
+write.csv(x.wide, file=gzfile('../data/osd-color-codes-slices.csv.gz'), row.names = FALSE, na = '')
+write.csv(osd.color.table, file=gzfile('../data/osd-color-table.csv.gz'), row.names = FALSE, na = '')
 
 
 
