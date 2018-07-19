@@ -16,7 +16,7 @@ x <- read.csv('../data/osd_colors.csv.gz', stringsAsFactors=FALSE, na.strings=''
 x <- x[order(x$series, x$top), ]
 
 # how many colors are we really dealing with?
-# 303
+# 366
 x$color_str <- paste0(x$matrix_wet_color_hue, ' ', x$matrix_wet_color_value , '/', x$matrix_wet_color_chroma)
 x$color_str_code <- as.integer(factor(x$color_str))
 
@@ -35,6 +35,8 @@ x.rgb$b_int <- round(rescale(x.rgb$b, to=c(0,255), from = c(0,1)))
 
 # re-combine with original LUT, row-order is preserved
 osd.color.table <- cbind(osd.color.table, x.rgb)
+osd.color.table <- osd.color.table[order(osd.color.table$color_str_code), ]
+
 
 # init SoilProfileCollection obj
 depths(x) <- series ~ top + bottom
@@ -46,9 +48,11 @@ x.slices <- slice(x, c(5, 10, 15, 25, 50, 75, 100, 125) ~ color_str_code, just.t
 x.wide <- dcast(x.slices, series ~ top, value.var = 'color_str_code')
 names(x.wide) <- c('series', paste0('top_', c(5, 10, 15, 25, 50, 75, 100, 125)))
 
+## these are moist colors
+
 # save files
-write.csv(x.wide, file=gzfile('../data/osd-color-codes-slices.csv.gz'), row.names = FALSE, na = '')
-write.csv(osd.color.table, file=gzfile('../data/osd-color-table.csv.gz'), row.names = FALSE, na = '')
+write.csv(x.wide, file=gzfile('../data/osd-moist-color-codes-slices.csv.gz'), row.names = FALSE, na = '')
+write.csv(osd.color.table, file=gzfile('../data/osd-moist-color-table.csv.gz'), row.names = FALSE, na = '')
 
 
 
