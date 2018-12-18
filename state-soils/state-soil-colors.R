@@ -2,7 +2,6 @@ library(soilDB)
 library(plyr)
 library(cluster)
 library(sharpshootR)
-library(colorspace)
 library(reshape2)
 library(maps)
 
@@ -65,6 +64,11 @@ pedons$state <- NULL
 ss$series <- toupper(ss$series)
 site(pedons) <- ss
 
+
+previewColors(unique(pedons$moist_soil_color), method='MDS')
+
+
+
 # check: looks good
 png(file='state-soil-kssl-data-eval-colors.png', width = 800, height=400, type = 'cairo', antialias = 'subpixel', res = 70)
 
@@ -76,7 +80,7 @@ dev.off()
 ## aggregate moist color by state
 # convert soil colors to LAB colorspace
 # moist colors
-cols.lab <- as(sRGB(pedons$m_r, pedons$m_g, pedons$m_b), 'LAB')@coords
+cols.lab <- convertColor(cbind(pedons$m_r, pedons$m_g, pedons$m_b), from='sRGB', to = 'Lab', from.ref.white = 'D65', to.ref.white = 'D65', clip = FALSE)
 pedons$m_L <- cols.lab[, 1]
 pedons$m_A <- cols.lab[, 2]
 pedons$m_B <- cols.lab[, 3]
@@ -96,7 +100,9 @@ x.colors <- dcast(a.colors, state + top + bottom ~ variable, value.var = 'value'
 # note that missing colors must be padded with NA
 x.colors$soil_color <- NA
 not.na <- which(complete.cases(x.colors[, c('m_L', 'm_A', 'm_B')]))
-cols.srgb <- data.frame(as(LAB(x.colors$m_L, x.colors$m_A, x.colors$m_B), 'sRGB')@coords)
+cols.srgb <- data.frame(convertColor(cbind(x.colors$m_L, x.colors$m_A, x.colors$m_B), from='Lab', to = 'sRGB', from.ref.white = 'D65', to.ref.white = 'D65', clip = FALSE))
+names(cols.srgb) <- c('R', 'G', 'B')
+
 
 x.colors$soil_color[not.na] <- with(cols.srgb[not.na, ], rgb(R, G, B, maxColorValue = 1))
 
