@@ -4,6 +4,8 @@ library(cluster)
 library(sharpshootR)
 library(reshape2)
 library(maps)
+library(colorspace)
+
 
 # state soils
 ss <- read.csv('state_soils.csv', stringsAsFactors = FALSE)
@@ -243,6 +245,16 @@ aggregateColorPlot(a.osd, print.label = FALSE, x.axis = FALSE, rect.border = NA,
 title(main='State Soil Color Signatures: OSD', line=-1, cex.main=2)
 
 dev.off()
+
+
+png(file='state-soils-osd-signatures-inverse.png', width = 1000, height=900, type = 'quartz', antialias = 'subpixel', res = 90)
+
+par(mar=c(0.5, 6, 1, 0.5), bg='black', fg='white')
+aggregateColorPlot(a.osd, print.label = FALSE, x.axis = FALSE, rect.border = NA, horizontal.borders = TRUE, horizontal.border.lwd = 1)
+
+dev.off()
+
+
 
 
 
