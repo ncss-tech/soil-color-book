@@ -65,7 +65,7 @@ ss$series <- toupper(ss$series)
 site(pedons) <- ss
 
 
-previewColors(unique(pedons$moist_soil_color), method='MDS')
+previewColors(pedons$moist_soil_color, method='MDS')
 
 
 
