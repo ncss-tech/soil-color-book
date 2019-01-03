@@ -7,6 +7,9 @@ library(maps)
 library(colorspace)
 
 
+## TODO:
+## using simplifyColors=TRUE makes the code much simpler
+
 # state soils
 ss <- read.csv('state_soils.csv', stringsAsFactors = FALSE)
 
@@ -39,7 +42,7 @@ phcolor <- extractMorphTable(x, table='phcolor')
 pedons <- lapply(x, function(i) i$SPC)
 
 # combine into a single SPC object
-pedons <- do.call('rbind', pedons)
+pedons <- aqp::union(pedons)
 
 ## TODO: there may be some issues here with labsampnum
 # simplify combined color data
@@ -261,7 +264,7 @@ dev.off()
 ## all colors from KSSL pedons
 pedons$state <- factor(pedons$state, levels=ll)
 a.kssl <- aggregateColor(pedons, groups = 'state', col = 'moist_soil_color')
-
+a.kssl.15 <- aggregateColor(pedons, groups = 'state', col = 'moist_soil_color', k = 15)
 
 png(file='state-soils-kssl-signatures.png', width = 1000, height=800, type = 'cairo', antialias = 'subpixel', res = 90)
 
@@ -270,6 +273,17 @@ aggregateColorPlot(a.kssl, print.label = FALSE, x.axis = FALSE, rect.border = NA
 title(main='State Soil Color Signatures: KSSL', line=-1, cex.main=2)
 
 dev.off()
+
+
+png(file='state-soils-kssl-signatures-15.png', width = 1000, height=800, type = 'cairo', antialias = 'subpixel', res = 90)
+
+par(mar=c(0.5, 6, 1, 0.5), bg='black', fg='white')
+aggregateColorPlot(a.kssl.15, print.label = FALSE, x.axis = FALSE, rect.border = NA, horizontal.borders = TRUE, horizontal.border.lwd = 1)
+
+dev.off()
+
+
+
 
 
 
